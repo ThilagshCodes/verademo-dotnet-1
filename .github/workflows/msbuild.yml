@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: MSBuild
 
 on:
@@ -40,8 +35,14 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Package
+    - name: Package and save output
       working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: veracode package -das ${{env.SOLUTION_FILE_PATH}}
+      run: |
+        $outputFile = "veracode_output.txt"
+        veracode package -das ${{env.SOLUTION_FILE_PATH}} 2>&1 | Tee-Object -FilePath $outputFile
+
+    - name: Upload veracode output as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: veracode-output
+        path: veracode_output.txt
