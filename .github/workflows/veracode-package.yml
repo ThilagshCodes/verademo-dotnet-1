@@ -38,11 +38,11 @@ jobs:
     - name: Package and save output
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: |
-        $outputFile = "veracode_log.txt"
+        $outputFile = "${{ github.event.repository.name }}_veracode_log.txt"
         veracode package -das ${{env.SOLUTION_FILE_PATH}} 2>&1 | Tee-Object -FilePath $outputFile
 
     - name: Upload veracode output as artifact
       uses: actions/upload-artifact@v3
       with:
         name: veracode-package-log
-        path: veracode_log.txt
+        path: ${{ github.event.repository.name }}_veracode_log.txt
