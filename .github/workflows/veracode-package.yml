@@ -28,7 +28,7 @@ jobs:
     - name: Check for .csproj files
       id: check_csproj
       run: |
-        if (Get-ChildItem -Recurse -Filter *.csproj).Count -eq 0 {
+        if ((Get-ChildItem -Recurse -Filter *.csproj).Count -eq 0) {
           echo "No .csproj files found."
           echo "continue=false" >> $env:GITHUB_ENV
         } else {
